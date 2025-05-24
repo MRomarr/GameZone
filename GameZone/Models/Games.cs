@@ -8,11 +8,13 @@ namespace GameZone.Models
        
         public string Description { get; set; }
         public string Cover { get; set; }
-        
+        public Double price { get; set; }
+
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         
         public List<GameDevice> Devices { get; set; }
+        public UserGames UserGames { get; set; }
 
     }
 }

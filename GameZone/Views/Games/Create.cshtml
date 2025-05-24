@@ -27,11 +27,16 @@
             </div>
             <div>
                 <label asp-for="Devices" class="form-label mt-4"></label>
-                <select class="form-select" asp-for="Devices" asp-items="Model.Devices"
+                <select class="form-select" asp-for="SelectedDiveces" asp-items="Model.Devices"
                         data-placeholder="Select a Device">
 					<option value="" ></option>
                 </select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                <span asp-validation-for="Devices" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="price" class="form-label mt-4"></label>
+                <input type="number" class="form-control" asp-for="price" placeholder="Game Price" />
+                <span asp-validation-for="price" class="text-danger"></span>
             </div>
             <div>
                 <label asp-for="Description" class="form-label mt-4"></label>

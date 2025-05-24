@@ -29,6 +29,7 @@ namespace GameZone.Services
                 .AsNoTracking().SingleOrDefault(g => g.Id == id);
             return game;
         }
+
         public async Task Create(CreateGameViewModel model)
         {
             var conver = await SaveCover(model.Cover);
@@ -38,6 +39,7 @@ namespace GameZone.Services
                 Description = model.Description,
                 CategoryId = model.CategoryId,
                 Cover = conver,
+                price = model.price,
                 Devices = model.SelectedDiveces.Select(d => new GameDevice
                 {
                     DeviceId = d 
@@ -54,6 +56,7 @@ namespace GameZone.Services
             game.Name = model.Name;
             game.Description = model.Description;
             game.CategoryId = model.CategoryId;
+            game.price = model.price;
             game.Devices = model.SelectedDiveces.Select(d => new GameDevice
             {
                 DeviceId = d

@@ -4,6 +4,7 @@ using GameZone.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameZone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250520161652_authstep")]
+    partial class authstep
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,30 +224,11 @@ namespace GameZone.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("price")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("GameZone.Models.UserGames", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "GameId");
-
-                    b.HasIndex("GameId")
-                        .IsUnique();
-
-                    b.ToTable("UserGames");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -410,25 +394,6 @@ namespace GameZone.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("GameZone.Models.UserGames", b =>
-                {
-                    b.HasOne("GameZone.Models.Games", "Game")
-                        .WithOne("UserGames")
-                        .HasForeignKey("GameZone.Models.UserGames", "GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameZone.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -488,9 +453,6 @@ namespace GameZone.Migrations
             modelBuilder.Entity("GameZone.Models.Games", b =>
                 {
                     b.Navigation("Devices");
-
-                    b.Navigation("UserGames")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

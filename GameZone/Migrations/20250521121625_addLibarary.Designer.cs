@@ -4,6 +4,7 @@ using GameZone.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameZone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250521121625_addLibarary")]
+    partial class addLibarary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,9 +224,6 @@ namespace GameZone.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("price")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -241,8 +241,7 @@ namespace GameZone.Migrations
 
                     b.HasKey("UserId", "GameId");
 
-                    b.HasIndex("GameId")
-                        .IsUnique();
+                    b.HasIndex("GameId");
 
                     b.ToTable("UserGames");
                 });
@@ -413,13 +412,13 @@ namespace GameZone.Migrations
             modelBuilder.Entity("GameZone.Models.UserGames", b =>
                 {
                     b.HasOne("GameZone.Models.Games", "Game")
-                        .WithOne("UserGames")
-                        .HasForeignKey("GameZone.Models.UserGames", "GameId")
+                        .WithMany()
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GameZone.Data.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("UserGames")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -480,6 +479,11 @@ namespace GameZone.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GameZone.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("UserGames");
+                });
+
             modelBuilder.Entity("GameZone.Models.Category", b =>
                 {
                     b.Navigation("Games");
@@ -488,9 +492,6 @@ namespace GameZone.Migrations
             modelBuilder.Entity("GameZone.Models.Games", b =>
                 {
                     b.Navigation("Devices");
-
-                    b.Navigation("UserGames")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

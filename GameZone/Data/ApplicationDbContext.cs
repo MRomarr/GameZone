@@ -1,9 +1,10 @@
 ﻿using GameZone.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameZone.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
@@ -12,8 +13,11 @@ namespace GameZone.Data
         public DbSet<Category> Categories  { get; set; }
         public DbSet<Device> Devices  { get; set; }
         public DbSet<GameDevice> GameDevices  { get; set; }
+        public DbSet<UserGames> UserGames { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<Category>()
             .HasData(new Category[]
             {
@@ -34,6 +38,7 @@ namespace GameZone.Data
                 new Device { Id = 4, Name = "PC", Icon = "bi bi-pc-display" }
                 });
             modelBuilder.Entity<GameDevice>().HasKey(e=> new {e.DeviceId, e.GameId});
+            modelBuilder.Entity<UserGames>().HasKey(e => new { e.UserId, e.GameId });
             base.OnModelCreating(modelBuilder);
         }
 

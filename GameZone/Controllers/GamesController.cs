@@ -1,8 +1,10 @@
 ﻿using GameZone.Services;
 using GameZone.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameZone.Controllers;
+[Authorize]
 public class GamesController : Controller
 {
     private readonly ICategoriesServics _categoriesService;

@@ -2,7 +2,59 @@
 @model IEnumerable<Games>
 @{
     ViewData["Title"] = "Home Page";
+    IEnumerable<SelectListItem> categories = ViewBag.Categories as IEnumerable<SelectListItem>;
+    IEnumerable<SelectListItem> Devices = ViewBag.Devices as IEnumerable<SelectListItem>;
+    var selectedCategory = Context.Request.Query["Categories"];
+    var selectedDevice = Context.Request.Query["Devices"];
 }
+<form method="get" asp-controller="Home" asp-action="Index" class="mb-4">
+
+    <div class="row mb-3">
+        <div class="col-md-5">
+            <select name="Categories"  class="form-control">
+                <option value="">All Categories</option>
+                @foreach(var item in categories)
+                {
+					if (item.Value == selectedCategory)
+					{
+						<option value="@item.Value" selected>@item.Text</option>
+					}
+					else
+					{
+						<option value="@item.Value">@item.Text</option>
+					}
+                }
+            </select>
+        </div>
+        <div class="col-md-5">
+            <select name="Devices" class="form-control">
+                <option value="">All Devices</option>
+                @foreach (var item in Devices)
+                {
+                    if (item.Value == selectedDevice)
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-success" type="submit">Filter</button>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mb-2">
+        <input type="text" name="search" id="searchBox" class="form-control" placeholder="Search games..." value="@Context.Request.Query["search"]" />
+        <button class="btn btn-success" type="submit">Search</button>
+    </div>
+    <div>
+        <ul id="results" class="list-group mt-2"></ul>
+    </div>
+</form>
+
 @if (!Model.Any())
 {
     <div class="alert alert-warning">
@@ -10,26 +62,36 @@
         <p class="mb-0">No Games Were Added yet.</p>
     </div>
 }
+
 <div class="row mt-5">
     @foreach(var game in Model)
     {
-        <div class="col-lg-4 col-md-6" >
-            <a class="card border-success mb-3 text-decoration-none" asp-controller="Games" asp-action="Details" asp-route-id="@game.Id">
-                <div class="card-body" style="background-image: url('@($"{FileSettings.ImagesPath}/{game.Cover}")'); background-size: cover; background-position: center; height: 500px;">
-                    <div class="d-flex align-items-end h-100">
-                        <span class="badge rounded-pill fs-3 bg-secondary">@game.Category?.Name</span>
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-success mb-3">
+                <a class="text-decoration-none" asp-controller="Home" asp-action="Details" asp-route-id="@game.Id" style="display: block;">
+                    <div class="card-body" style="background-image: url('@($"{FileSettings.ImagesPath}/{game.Cover}")'); background-size: cover; background-position: center; height: 500px;">
+                        <div class="d-flex align-items-end h-100">
+                            <span class="badge rounded-pill fs-3 bg-secondary">@game.Category?.Name</span>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-                    <h5>@game.Name</h5>
-                    <div>
-                        @foreach (var device in game.Devices)
+                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                        <h5>@game.Name</h5>
+                        <h3 class="text-success">@game.price.ToString("C")</h3>
+                        @foreach (var gameDevice in game.Devices)
                         {
-                            <i class="@device.Device.Icon me-2 fs-4"></i>
+                            <i class="@gameDevice.Device.Icon me-2 fs-4"></i>
                         }
                     </div>
+                </a>
+                <div class="d-flex justify-content-around">
+                    <a class="btn btn-secondary btn-lg Buy-Game" asp-action="Add" asp-route-id="@game.Id" asp-controller="Libarrary">Buy</a>
+                    <button class="btn btn-primary add-to-cart" data-id="@game.Id">Add to Cart</button>
                 </div>
-            </a>
+            </div>
         </div>
     }
 </div>
+@section scripts {
+    <script src="~/js/add-to-cart.js"></script>
+	<script src="~/js/searchbox.js"></script>   
+}
