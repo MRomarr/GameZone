@@ -19,6 +19,11 @@ namespace GameZone.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        
+
+
+
+        // Register --------------
         [HttpGet]
         public IActionResult Register()
         {
@@ -46,7 +51,7 @@ namespace GameZone.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     // if want to add role 
-                    await _userManager.AddToRoleAsync(user, "Admin");
+                    
                     return RedirectToAction("Login", "Home");
                 }
                 else
@@ -60,8 +65,10 @@ namespace GameZone.Controllers
             return View(NewUserViewModel);
         }
 
-        
 
+
+        
+        // login ------------------
         [HttpGet]
         public IActionResult Login()
         {
@@ -99,6 +106,58 @@ namespace GameZone.Controllers
             }
             return View(loginUserViewModel);
         }
+
+
+
+
+        // change password form ---------
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login", "Acount");
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    await _signInManager.RefreshSignInAsync(user);
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return View(model);
+        }
+        
+
+
+
+
+
+        // forget pasword ------------
+
+
+
+
+
+
+
+        // logout ------------------
         public IActionResult Logout()
         {
             _signInManager.SignOutAsync();

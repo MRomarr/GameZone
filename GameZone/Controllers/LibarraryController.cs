@@ -21,6 +21,7 @@ namespace GameZone.Controllers
         }
 
 
+        // all games the player have --------
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -33,24 +34,8 @@ namespace GameZone.Controllers
 
             return View(games);
         }
-        public async Task<IActionResult> Add(int id)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user != null)
-            {
-                if (_userGamesServies.GetById(user.Id, id) == null)
-                {
-                    _userGamesServies.Add(user.Id, id);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return RedirectToAction("Index");
-                }
-            }
-            return RedirectToAction("Login", "Acount");
 
-        }
+
 
 
 

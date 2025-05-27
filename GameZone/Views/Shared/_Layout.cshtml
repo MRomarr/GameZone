@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap">
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+	<link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+	<link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/sweetalert2/sweetalert2.min.css" />
     <link rel="stylesheet" href="~/lib/limonte-sweetalert2/sweetalert2.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -19,54 +20,68 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-light mb-3" data-bs-theme="light">
+        <nav class="navbar navbar-expand-lg bg-light shadow-sm mb-3" data-bs-theme="light">
             <div class="container-fluid">
-                <a class="navbar-brand " asp-controller="Home" asp-action="Index">GameZone</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Brand -->
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">GameZone</a>
+
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Main Navbar Content -->
+                <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+                    <!-- Left: Navigation Links -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Libarrary" asp-action="Index">Libaray</a>
+                            <a class="nav-link text-dark" asp-controller="Libarrary" asp-action="Index">Library</a>
                         </li>
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                 <a class="nav-link text-dark" asp-controller="Games" asp-action="Index">Admin</a>
-                            </li> 
-                        }                       
+                                <a class="nav-link text-dark" asp-controller="Games" asp-action="Index">Admin</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Right: User Actions -->
+                    <ul class="navbar-nav d-flex align-items-center">
+                        <li class="nav-item me-3">
+                            <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
+                                <i class="bi bi-cart3 fs-5"></i>
+                            </a>
+                        </li>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-dark" asp-controller="Acount" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Acount" asp-action="Register">Register</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <div class="dropdown h-100 col-3" style="width: 10px;">
+                                <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdownMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-list text-dark"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end mt-4" aria-labelledby="navbarDropdownMenu">
+                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Details">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Acount" asp-action="Logout">Logout</a></li>
+                                </ul>
+                            </div>
+                        }
+
                     </ul>
                 </div>
             </div>
-            <div style="margin-right:10px;">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">Cart</a>
-                    </li>
-                    @if (!User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="acount" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="acount" asp-action="register">Register</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Welcome.@User.Identity.Name</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="acount" asp-action="Logout">Logout</a>
-                        </li>
-                    }
-                </ul>
-            </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -74,13 +89,11 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - GameZone - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/lib/select2/js/select2.min.js"></script>
+	<script src="~/lib/toastr.js/toastr.min.js"></script>
 	<script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
 	<script src="~/lib/limonte-sweetalert2/sweetalert2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

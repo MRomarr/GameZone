@@ -2,6 +2,8 @@
 @model Games
 @{
     ViewData["Title"] = @Model.Name + " Details";
+    var Rating = ViewBag.Rating;
+    var AverageRating = ViewBag.AverageRating;
 
 }
 <div class="card border-success rounded-4 mt-5 overflow-hidden">
@@ -23,6 +25,103 @@
             <div class="col-md-4">
                 <img src="@($"{FileSettings.ImagesPath}/{Model.Cover}")" alt="@Model.Name" class="w-100" />
             </div>
+            <div style="margin-left:10px;">
+                <strong>Rate this game:</strong>
+                <div class="rating d-flex justify-content-between">
+                    <div class="userRating"> 
+                        <div id="rating-stars">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                @if (Rating >= i)
+                                {
+                                    <span class="star selected" data-value="@i">&#9733;</span> @* ★ filled star *@
+                                }
+                                else
+                                {
+                                    <span class="star" data-value="@i">&#9734;</span> @* ☆ empty star *@
+                                }
+                            }
+
+                        </div>
+                        <div id="rating-result" class="text-success mt-2"></div>
+                    </div>
+                    <div class="allRating">
+						<h3 class="text-success me-5">Average Rating: @AverageRating</h3>
+					</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<style>
+    .star {
+        font-size: 30px;
+        cursor: pointer;
+        color: gold;
+        margin-right: 5px;
+    }
+</style>
+
+
+@section Scripts {
+	<script src="~/js/rating.js"></script>
+      @Html.AntiForgeryToken()
+    <script>
+                $(document).ready(function () {
+            // Helper to update stars display
+            function updateStars(selectedValue) {
+                $('.star').each(function () {
+                    var starValue = $(this).data('value');
+                    if (starValue <= selectedValue) {
+                        $(this).html('&#9733;').addClass('selected');
+                    } else {
+                        $(this).html('&#9734;').removeClass('selected');
+                    }
+                });
+            }
+
+            // Track the current selected rating
+            var initialRating = @(@Rating ?? 0);
+            var currentRating = initialRating;
+            updateStars(currentRating);
+
+            // Click event to rate
+            $('.star').on('click', function () {
+                var value = $(this).data('value');
+                $.ajax({
+                    url: '@Url.Action("Rate", "Home")',
+                    method: 'POST',
+                    data: {
+                        GameId: @Model.Id,
+                        value: value,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        $('#rating-result').text("Thanks for rating!");
+                        currentRating = value;
+                        updateStars(currentRating);
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 401) {
+                            window.location.href = "/Acount/Login";
+                        } else {
+                            $('#rating-result').text("Error submitting rating.");
+                        }
+                    }
+                });
+            });
+
+            // Hover effect
+            $('.star').hover(
+                function () {
+                    var value = $(this).data('value');
+                    updateStars(value);
+                },
+                function () {
+                    updateStars(currentRating);
+                }
+            );
+        });
+    </script>
+}
+

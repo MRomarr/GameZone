@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameZone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250521121625_addLibarary")]
-    partial class addLibarary
+    [Migration("20250526093322_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,11 +224,32 @@ namespace GameZone.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("price")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("GameZone.Models.Rating", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("GameZone.Models.UserGames", b =>
@@ -241,7 +262,8 @@ namespace GameZone.Migrations
 
                     b.HasKey("UserId", "GameId");
 
-                    b.HasIndex("GameId");
+                    b.HasIndex("GameId")
+                        .IsUnique();
 
                     b.ToTable("UserGames");
                 });
@@ -409,7 +431,7 @@ namespace GameZone.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("GameZone.Models.UserGames", b =>
+            modelBuilder.Entity("GameZone.Models.Rating", b =>
                 {
                     b.HasOne("GameZone.Models.Games", "Game")
                         .WithMany()
@@ -418,7 +440,26 @@ namespace GameZone.Migrations
                         .IsRequired();
 
                     b.HasOne("GameZone.Data.ApplicationUser", "User")
-                        .WithMany("UserGames")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GameZone.Models.UserGames", b =>
+                {
+                    b.HasOne("GameZone.Models.Games", "Game")
+                        .WithOne("UserGames")
+                        .HasForeignKey("GameZone.Models.UserGames", "GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameZone.Data.ApplicationUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -479,11 +520,6 @@ namespace GameZone.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameZone.Data.ApplicationUser", b =>
-                {
-                    b.Navigation("UserGames");
-                });
-
             modelBuilder.Entity("GameZone.Models.Category", b =>
                 {
                     b.Navigation("Games");
@@ -492,6 +528,9 @@ namespace GameZone.Migrations
             modelBuilder.Entity("GameZone.Models.Games", b =>
                 {
                     b.Navigation("Devices");
+
+                    b.Navigation("UserGames")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

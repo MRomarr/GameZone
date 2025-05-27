@@ -1,5 +1,4 @@
-﻿// Use Swal.fire directly with customClass instead of Swal.mixin
-$('.js-delete').on('click', function () {
+﻿$('.js-delete').on('click', function () {
     var btn = $(this);
     const swal = Swal.mixin({
         customClass: {

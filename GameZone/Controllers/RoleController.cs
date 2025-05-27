@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GameZone.Data;
 using GameZone.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -6,22 +7,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameZone.Controllers
 {
-    [Authorize(Roles ="Admin")]
+   // [Authorize(Roles ="Admin")]
     public class RoleController : Controller
     {
         public RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RoleController(RoleManager<IdentityRole> RoleManager, UserManager<IdentityUser> userManager)
+        public RoleController(RoleManager<IdentityRole> RoleManager, UserManager<ApplicationUser> userManager)
         {
             _roleManager = RoleManager;
             _userManager = userManager;
         }
+        
+        
+        
+        
         public IActionResult Index()
         {
             var roles = _roleManager.Roles.ToList();
             return View(roles); 
         }
+        
+        
+        
+        
+        
         [HttpGet]
         public IActionResult Create()
         {
@@ -47,6 +57,14 @@ namespace GameZone.Controllers
             }
             return View(model);
         }
+
+
+
+
+
+
+
+
         public async Task<IActionResult> Delete(string RoleName)
         {
             var role = await _roleManager.FindByNameAsync(RoleName);

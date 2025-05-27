@@ -1,0 +1,43 @@
+﻿@model GameZone.ViewModel.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Profile</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+        <dd class = "col-sm-5">
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <dd class="col-sm-2 btn btn-secondary">
+            <a asp-action="ChangePassword" class="text-white text-decoration-none" asp-controller="Acount">Change Password</a>
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a class="btn btn-primary" href="javascript:history.back()">Go Back</a>
+</div>

@@ -14,6 +14,7 @@ namespace GameZone.Data
         public DbSet<Device> Devices  { get; set; }
         public DbSet<GameDevice> GameDevices  { get; set; }
         public DbSet<UserGames> UserGames { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,7 @@ namespace GameZone.Data
                 });
             modelBuilder.Entity<GameDevice>().HasKey(e=> new {e.DeviceId, e.GameId});
             modelBuilder.Entity<UserGames>().HasKey(e => new { e.UserId, e.GameId });
+            modelBuilder.Entity<Rating>().HasKey(e => new { e.UserId, e.GameId });
             base.OnModelCreating(modelBuilder);
         }
 

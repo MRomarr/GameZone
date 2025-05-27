@@ -9,12 +9,12 @@ namespace GameZone.ViewModel
 
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
-        
+
         public Double price { get; set; }
 
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
 
-        [Display(Name = "Supported Devices")]
+        [Display(Name = "Devices")]
         public List<int> SelectedDiveces { get; set; } = new List<int>();
 
         public IEnumerable<SelectListItem> Devices { get; set; } = new List<SelectListItem>();

@@ -9,6 +9,7 @@
     <a class="btn btn-secondary btn-lg" asp-action="BuyAllCart" asp-controller="Cart">
         Buy All
     </a>
+    <h3>Total=@ViewBag.TotalPrice.ToString("C")</h3>
     <a class="btn btn-secondary btn-lg" asp-action="Index" asp-controller="Home">
         <i class="bi bi-plus-circle-dotted"></i>
         Add Game
@@ -48,7 +49,7 @@ else
                         <td class="align-middle">
                             <div class="d-flex justify-content-end">
                                 <div class="d-flex justify-content-between" style="width:50%;">
-                                    <a class="btn btn-secondary btn-lg" asp-action="Add" asp-route-id="@game.Id" asp-controller="Libarrary">Buy</a>
+                                    <a class="btn btn-secondary btn-lg" asp-action="Buy" asp-route-id="@game.Id" asp-controller="Cart">Buy</a>
 
                                     <a href="javascript:;" class="btn btn-danger rounded rounded-3 js-delete" data-id="@game.Id">
                                         <i class="bi bi-trash3"></i>

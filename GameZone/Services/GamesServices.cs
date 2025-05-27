@@ -20,7 +20,8 @@ namespace GameZone.Services
         }
         public IEnumerable<Games> GetAll()
         {
-            return _context.Games.Include(g=>g.Category).Include(g=>g.Devices).ThenInclude(d => d.Device)
+            return _context.Games.OrderBy(g => g.Id)
+                            .Include(g=>g.Category).Include(g=>g.Devices).ThenInclude(d => d.Device)
                 .AsNoTracking().ToList(); 
         }
         public Games? GetById(int id)
@@ -29,6 +30,7 @@ namespace GameZone.Services
                 .AsNoTracking().SingleOrDefault(g => g.Id == id);
             return game;
         }
+        public int Count()=>_context.Games.Count();
 
         public async Task Create(CreateGameViewModel model)
         {

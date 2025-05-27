@@ -4,28 +4,35 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameZone.Controllers;
-[Authorize]
+[Authorize] 
+// will add admin here
+// this is the admin port ---------------------------------------------
 public class GamesController : Controller
 {
     private readonly ICategoriesServics _categoriesService;
     private readonly IDevicesService _devicesService;
     private readonly IGamesServices _gamesService;
 
-    public GamesController(ICategoriesServics categoriesService,
-                           IDevicesService devicesService,
-                           IGamesServices gamesService)
+    public GamesController(ICategoriesServics categoriesService,IDevicesService devicesService,IGamesServices gamesService)
     {
         _categoriesService = categoriesService;
         _devicesService = devicesService;
         _gamesService = gamesService;
     }
 
+    // all games ---------------------------------
     public IActionResult Index()
     {
         var games = _gamesService.GetAll();
         return View(games);
     }
 
+
+
+
+    // game detail ------------------------------
+
+    [HttpGet]
     public IActionResult Details(int id)
     {
         var game = _gamesService.GetById(id);
@@ -34,9 +41,13 @@ public class GamesController : Controller
             return NotFound();
 
         return View(game);
-    }
+    }   // wiill change this
 
-    [HttpGet]
+
+
+
+
+    // create game --------------------------------
     public IActionResult Create()
     {
         CreateGameViewModel viewModel = new()
@@ -47,7 +58,6 @@ public class GamesController : Controller
 
         return View(viewModel);
     }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateGameViewModel model)
@@ -64,7 +74,10 @@ public class GamesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet]
+
+
+
+    // edit game -----------------------------------
     public IActionResult Edit(int id)
     {
         var game = _gamesService.GetById(id);
@@ -81,12 +94,13 @@ public class GamesController : Controller
             SelectedDiveces = game.Devices.Select(d => d.DeviceId).ToList(),
             Categories = _categoriesService.GetSelectList(),
             Devices = _devicesService.GetSelectLists(),
-            CurrentCover = game.Cover
+            CurrentCover = game.Cover,
+            price = game.price
+
         };
 
         return View(viewModel);
     }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(EditGameViewModel model)
@@ -105,6 +119,12 @@ public class GamesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+
+
+
+
+    // delete game -----------------------------------
     [HttpDelete]
     public IActionResult Delete(int id)
     {

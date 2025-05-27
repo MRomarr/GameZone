@@ -14,6 +14,10 @@ builder.Services.AddScoped<ICategoriesServics, CategoriesService>();
 builder.Services.AddScoped<IDevicesService, DevicesService>();
 builder.Services.AddScoped<IGamesServices, GamesServices>();
 builder.Services.AddScoped<IUserGamesServies, UserGamesServies>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+builder.Services.AddScoped<IRatingServies, RatingServies>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 {

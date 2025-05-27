@@ -231,6 +231,24 @@ namespace GameZone.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("GameZone.Models.Rating", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Ratings");
+                });
+
             modelBuilder.Entity("GameZone.Models.UserGames", b =>
                 {
                     b.Property<string>("UserId")
@@ -408,6 +426,25 @@ namespace GameZone.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("GameZone.Models.Rating", b =>
+                {
+                    b.HasOne("GameZone.Models.Games", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameZone.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GameZone.Models.UserGames", b =>
